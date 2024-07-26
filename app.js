@@ -6,13 +6,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalIncome = document.getElementById('total-income');
     const totalExpenses = document.getElementById('total-expenses');
     const balance = document.getElementById('balance');
+    const submitBtn = document.getElementById('submit-btn');
+    const updateBtn = document.getElementById('update-btn');
 
     let transactions = [];
+    let editingTransactionId = null;
 
     transactionForm.addEventListener('submit', (e) => {
         e.preventDefault();
-        addTransaction();
+        if (editingTransactionId) {
+            updateTransaction();
+        } else {
+            addTransaction();
+        }
     });
+
+    updateBtn.addEventListener('click', updateTransaction);
 
     function addTransaction() {
         const description = descriptionInput.value;
@@ -27,9 +36,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
             transactions.push(transaction);
             updateTransactions();
-            descriptionInput.value = '';
-            amountInput.value = '';
+            clearForm();
         }
+    }
+
+    function editTransaction(id) {
+        const transaction = transactions.find(trans => trans.id === id);
+        if (transaction) {
+            descriptionInput.value = transaction.description;
+            amountInput.value = transaction.amount;
+            editingTransactionId = id;
+            submitBtn.style.display = 'none';
+            updateBtn.style.display = 'inline';
+        }
+    }
+
+    function updateTransaction() {
+        const description = descriptionInput.value;
+        const amount = parseFloat(amountInput.value);
+
+        if (description && !isNaN(amount)) {
+            const transaction = transactions.find(trans => trans.id === editingTransactionId);
+            if (transaction) {
+                transaction.description = description;
+                transaction.amount = amount;
+                updateTransactions();
+                clearForm();
+            }
+        }
+    }
+
+    function deleteTransaction(id) {
+        transactions = transactions.filter(transaction => transaction.id !== id);
+        updateTransactions();
     }
 
     function updateTransactions() {
@@ -42,6 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const li = document.createElement('li');
             li.innerHTML = `
                 ${transaction.description} <span>${transaction.amount < 0 ? '-' : '+'}$${Math.abs(transaction.amount).toFixed(2)}</span>
+                <button class="edit-btn" onclick="editTransaction(${transaction.id})">Edit</button>
                 <button class="delete-btn" onclick="deleteTransaction(${transaction.id})">Delete</button>
             `;
 
@@ -57,10 +97,17 @@ document.addEventListener('DOMContentLoaded', () => {
         totalIncome.textContent = `$${income.toFixed(2)}`;
         totalExpenses.textContent = `$${Math.abs(expenses).toFixed(2)}`;
         balance.textContent = `$${(income + expenses).toFixed(2)}`;
+
+        submitBtn.style.display = 'inline';
+        updateBtn.style.display = 'none';
+        editingTransactionId = null;
     }
 
-    window.deleteTransaction = function (id) {
-        transactions = transactions.filter(transaction => transaction.id !== id);
-        updateTransactions();
-    };
+    function clearForm() {
+        descriptionInput.value = '';
+        amountInput.value = '';
+    }
+
+    window.editTransaction = editTransaction;
+    window.deleteTransaction = deleteTransaction;
 });

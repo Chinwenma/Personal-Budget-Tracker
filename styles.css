@@ -1,12 +1,16 @@
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f8c1;
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #f4f4f4;
 }
 
 .container {
-    max-width: 700px;
+    max-width: 600px;
     margin: 50px auto;
     padding: 20px;
     background-color: #fff;
@@ -14,10 +18,9 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-  
 h1 {
     text-align: center;
-    color: #131212;
+    color: #333;
 }
 
 .budget-summary {
@@ -32,16 +35,21 @@ h1 {
 
 form {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     margin-bottom: 20px;
 }
 
 input[type="text"],
 input[type="number"] {
-    width: 40%;
+    width: 100%;
     padding: 10px;
+    margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+}
+
+.none {
+    display: none;
 }
 
 button {
@@ -51,6 +59,7 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 10px;
 }
 
 button:hover {
@@ -65,11 +74,26 @@ ul {
 li {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     padding: 10px;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 5px;
     margin-bottom: 10px;
+}
+
+li .edit-btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+li .edit-btn:hover {
+    background-color: #0056b3;
 }
 
 li .delete-btn {
@@ -83,4 +107,24 @@ li .delete-btn {
 
 li .delete-btn:hover {
     background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+    .budget-summary{
+        flex-direction: column;
+        
+    }
+    form {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    input[type="text"],
+    input[type="number"] {
+        width: 40%;
+    }
+
+    button {
+        width: 18%;
+    }
 }
